@@ -1,6 +1,7 @@
 #include "iGraphics.h"
 #include <stdlib.h>
-#include<time.h>
+#include <time.h>
+#include<stdio.h>
 
 void location_change();
 void coordinates();
@@ -10,162 +11,244 @@ void location_change2();
 void coordinates2();
 void check_match2();
 
-bool musicOn=true;
-bool easy=true;
+bool musicOn = true;
+bool easy = true;
 int screen = 0;
-clock_t start,start2;
+clock_t start, start2;
+int puzNo=1;
+double moveCount=0;
 
-struct puzzle{
+
+
+
+struct puzzle
+{
 	int x;
 	int y;
 };
 
 struct puzzle pic[9];
 
-struct correctPuzzle{
+struct correctPuzzle
+{
 	int x;
 	int y;
 };
 
 struct correctPuzzle correct_pic[9];
 
-struct puzzle2{
+struct puzzle2
+{
 	int x2;
 	int y2;
 };
 
 struct puzzle2 pic2[16];
 
-struct correctPuzzle2{
+struct correctPuzzle2
+{
 	int x2;
 	int y2;
 };
 
 struct correctPuzzle2 correct_pic2[16];
 
-bool match=true;
-bool match2=true;
-char puzzlePices[9][20]={"image1x1.bmp","image2x1.bmp","image3x1.bmp","image1x2.bmp","image2x2.bmp","image3x2.bmp","image1x3.bmp",
-"image2x3.bmp", "image3x3.bmp"};
+bool match = true;
+bool match2 = true;
+char puzzlePices[9][20] = {"image1x1.bmp", "image2x1.bmp", "image3x1.bmp", "image1x2.bmp", "image2x2.bmp", "image3x2.bmp", "image1x3.bmp",
+						   "image2x3.bmp", "image3x3.bmp"};
+char puzzlePices1[9][20] = {"image#1x1.bmp", "image#2x1.bmp", "image#3x1.bmp", "image#1x2.bmp", "image#2x2.bmp", "image#3x2.bmp", "image#1x3.bmp",
+							"image#2x3.bmp", "image#3x3.bmp"};
+char puzzlePices3[9][20] = {"image$1x1.bmp", "image$2x1.bmp", "image$3x1.bmp", "image$1x2.bmp", "image$2x2.bmp", "image$3x2.bmp", "image$1x3.bmp",
+							"image$2x3.bmp", "image$3x3.bmp"};
+char puzzlePices4[9][20] = {"image&1x1.bmp", "image&2x1.bmp", "image&3x1.bmp", "image&1x2.bmp", "image&2x2.bmp", "image&3x2.bmp", "image&1x3.bmp",
+							"image&2x3.bmp", "image&3x3.bmp"};
 
-char puzzlePices2[16][25]={"image@1x1.bmp","image@2x1.bmp","image@3x1.bmp","image@4x1.bmp","image@1x2.bmp","image@2x2.bmp","image@3x2.bmp",
-"image@4x2.bmp","image@1x3.bmp","image@2x3.bmp", "image@3x3.bmp","image@4x3.bmp","image@1x4.bmp","image@2x4.bmp","image@3x4.bmp",
-"image@4x4.bmp"};
 
-int wall_x=0,wall_y=334;
-int wall_x2=0,wall_y2=375;
+char puzzlePices2[16][25] = {"image@1x1.bmp", "image@2x1.bmp", "image@3x1.bmp", "image@4x1.bmp", "image@1x2.bmp", "image@2x2.bmp", "image@3x2.bmp",
+							 "image@4x2.bmp", "image@1x3.bmp", "image@2x3.bmp", "image@3x3.bmp", "image@4x3.bmp", "image@1x4.bmp", "image@2x4.bmp", "image@3x4.bmp",
+							 "image@4x4.bmp"};
+
+int wall_x = 0, wall_y = 334;
+int wall_x2 = 0, wall_y2 = 375;
 char score[10];
+char move[10];
 
 void iDraw()
 {
 	iClear();
 	// place your drawing codes here
-	if (screen == 0)                    //Home page
-	{   
+	if (screen == 0) // Home page
+	{
 
-		iShowBMP(0, 0, "Home page.bmp");
+		iShowBMP(0, 0, "OIG4.bmp");
 		iShowBMP2(30, 300, "button 1.bmp", 0);
 		iShowBMP2(30, 200, "button 2.bmp", 0);
 		iShowBMP2(30, 100, "button 3.bmp", 0);
-		iShowBMP2(580,20,"info button.bmp",0);
+		iShowBMP2(580, 20, "info button.bmp", 0);
 	}
-	
-	if (screen == 1)                  //Puzzle1
+
+	if (screen == 1) // Puzzle1
 	{
-		//iShowBMP(0, 0, "screen2.bmp");
-		iShowBMP(0,0,"wall.bmp");
-		iShowBMP(550,300,"preview.bmp");
+
+		// iShowBMP(0, 0, "screen2.bmp");
+		iShowBMP(0, 0, "wall.bmp");
+		if(puzNo==1)
+		{
+			iShowBMP(550, 300, "preview.bmp");
+		}
+		if(puzNo==2)
+		{
+			iShowBMP(550, 300, "preview1.bmp");
+		}
+		if(puzNo==3)
+		{
+			iShowBMP(550, 300, "preview3.bmp");
+		}
+		if(puzNo==4)
+		{
+			iShowBMP(550, 300, "preview4.bmp");
+		}
 		iText(600, 275, "Match this", GLUT_BITMAP_TIMES_ROMAN_24);
-		iShowBMP2(550, 30, "button6.bmp", 0);
-       
-	   iSetColor(255,255,255);
+		//iShowBMP2(550, 30, "button6.bmp", 0);
+
+		iSetColor(255, 255, 255);
 		clock_t end = clock();
-		double time_diff = ( start - end) / CLOCKS_PER_SEC;
+		double time_diff = (start - end) / CLOCKS_PER_SEC;
 		char str[10];
+		char str2[10];
 		sprintf(str, "%.2lf", time_diff);
-		if (time_diff < 1){
+		sprintf(str2, "%g", moveCount);
+		if (time_diff < 1)
+		{
 			screen = 5;
-			PlaySound("game over.wav", NULL,SND_ASYNC);
-			 //PlaySound("bg music.wav", NULL, SND_LOOP | SND_ASYNC);
+			PlaySound(TEXT("game over.wav"), NULL, SND_ASYNC);
+			if (puzNo < 4)
+			{
+				puzNo++;
+			}
+			else
+			{
+				puzNo = 1;
+			}
 		}
 		iText(580, 150, "TIME :", GLUT_BITMAP_TIMES_ROMAN_24);
 		iText(660, 150, str, GLUT_BITMAP_TIMES_ROMAN_24);
+		iText(580, 180, "MOVE :", GLUT_BITMAP_TIMES_ROMAN_24);
+		iText(680, 180, str2, GLUT_BITMAP_TIMES_ROMAN_24);
 
-		int count = 1;
-		for (int i = 0; i<3; i++)
+		int count = 1, count1 = 1, count3 = 1, count4 = 1;
+		for (int i = 0; i < 3; i++)
 		{
-			for (int j = 0; j<3; j++)
+			for (int j = 0; j < 3; j++)
 			{
-				if (i == 0 && j == 0)    continue;
+				if (i == 0 && j == 0)
+					continue;
 				else
 				{
-					iShowBMP(pic[count].x,pic[count].y, puzzlePices[count]);
-					count++;
-				 }
+					if (puzNo == 1)
+					{
+						iShowBMP(pic[count].x, pic[count].y, puzzlePices[count]);
+						count++;
+					}
+					if (puzNo == 2)
+					{
+						iShowBMP(pic[count1].x, pic[count1].y, puzzlePices1[count1]);
+						count1++;
+					}
+					if (puzNo == 3)
+					{
+						iShowBMP(pic[count3].x, pic[count3].y, puzzlePices3[count3]);
+						count3++;
+					}
+					if (puzNo == 4)
+					{
+						iShowBMP(pic[count4].x, pic[count4].y, puzzlePices4[count4]);
+						count4++;
+					}
+				}
 			}
 		}
 		check_match();
-		if(match == true){
+		if (match == true)
+		{
 			screen = 6;
-            if(easy)
-			sprintf(score, "%g",30-time_diff);
+			if (easy)
+				sprintf(score, "%g", 30 - time_diff);
 			else
-			sprintf(score, "%g",20-time_diff);
-			
-			PlaySound("win.wav",NULL,SND_ASYNC);
+				sprintf(score, "%g", 20 - time_diff);
+
+			sprintf(move, "%g", moveCount);
+
+			PlaySound(TEXT("win.wav"), NULL, SND_ASYNC);
+			if (puzNo < 4)
+			{
+				puzNo++;
+			}
+			else
+			{
+				puzNo = 1;
+			}
 		}
-		
 	}
-	if (screen == 8)                 //Puzzle2
+	if (screen == 8) // Puzzle2
 	{
-		//iShowBMP(0, 0, "screen2.bmp");
-		iShowBMP(0,0,"wall.bmp");
-		iShowBMP(550,300,"preview2.bmp");
+		// iShowBMP(0, 0, "screen2.bmp");
+		iShowBMP(0, 0, "wall.bmp");
+		iShowBMP(550, 300, "preview2.bmp");
 		iText(600, 275, "Match this", GLUT_BITMAP_TIMES_ROMAN_24);
-		iShowBMP2(550, 30, "button6.bmp", 0);
-       
-	   iSetColor(255,255,255);
+		//iShowBMP2(550, 30, "button6.bmp", 0);
+
+		iSetColor(255, 255, 255);
 		clock_t end = clock();
-		double time_diff = ( start2 - end) / CLOCKS_PER_SEC;
+		double time_diff = (start2 - end) / CLOCKS_PER_SEC;
 		char str[10];
+		char str2[10];
 		sprintf(str, "%.2lf", time_diff);
-		if (time_diff < 1){
+		sprintf(str2, "%g", moveCount);
+		if (time_diff < 1)
+		{
 			screen = 5;
-			PlaySound("game over.wav", NULL,SND_ASYNC);
-			 //PlaySound("bg music.wav", NULL, SND_LOOP | SND_ASYNC);
+			PlaySound(TEXT("game over.wav"), NULL, SND_ASYNC);
+			// PlaySound("bg music.wav", NULL, SND_LOOP | SND_ASYNC);
 		}
 		iText(580, 150, "TIME :", GLUT_BITMAP_TIMES_ROMAN_24);
 		iText(660, 150, str, GLUT_BITMAP_TIMES_ROMAN_24);
+		iText(580, 180, "MOVE :", GLUT_BITMAP_TIMES_ROMAN_24);
+		iText(680, 180, str2, GLUT_BITMAP_TIMES_ROMAN_24);
 
 		int index = 1;
-		for (int i = 0; i<4; i++)
+		for (int i = 0; i < 4; i++)
 		{
-			for (int j = 0; j<4; j++)
+			for (int j = 0; j < 4; j++)
 			{
-				if (i == 0 && j == 0)    continue;
+				if (i == 0 && j == 0)
+					continue;
 				else
 				{
-					iShowBMP(pic2[index].x2,pic2[index].y2, puzzlePices2[index]);
+					iShowBMP(pic2[index].x2, pic2[index].y2, puzzlePices2[index]);
 					index++;
-				 }
+				}
 			}
 		}
 		check_match2();
-		if(match2 == true){
+		if (match2 == true)
+		{
 			screen = 6;
-			if(easy)
-			sprintf(score, "%g",45-time_diff);
+			if (easy)
+				sprintf(score, "%g", 45 - time_diff);
 			else
-			sprintf(score, "%g",30-time_diff);
-			PlaySound("win.wav",NULL,SND_ASYNC);
+				sprintf(score, "%g", 30 - time_diff);
+
+			sprintf(move, "%g", moveCount);
+
+			PlaySound(TEXT("win.wav"), NULL, SND_ASYNC);
 		}
-		
 	}
 
-		//iShowBMP(0,0,"pokemon.bmp");
-		
+	// iShowBMP(0,0,"pokemon.bmp");
 
-	if (screen == 2)                       //music
+	if (screen == 2) // music
 	{
 
 		iShowBMP(0, 0, "pikachuNew.bmp");
@@ -173,54 +256,71 @@ void iDraw()
 		iShowBMP2(550, 400, "button5.bmp", 0);
 		iShowBMP2(550, 30, "button6.bmp", 0);
 	}
-	if (screen == 3)                     //mode
+	if (screen == 3) // mode
 	{
 		iShowBMP(0, 0, "screen3.bmp");
 		iShowBMP2(550, 30, "button6.bmp", 0);
 		iShowBMP2(50, 350, "button9.bmp", 0);
-		iShowBMP2(550,350, "button10.bmp", 0);
+		iShowBMP2(550, 350, "button10.bmp", 0);
+		iSetColor(255, 255, 255);
+		if (easy)
+		{
+			iText(30, 450, "MODE : Easy", GLUT_BITMAP_TIMES_ROMAN_24);
+		}
+		else
+		{
+			iText(30, 450, "MODE : Hard", GLUT_BITMAP_TIMES_ROMAN_24);
+		}
 	}
-	if(screen == 4)                    //Info
-	{                  
-        iShowBMP(0,0,"bg8.bmp");
-	    iText(30, 120, "Use Left click to move a picture .The picture you click will be swapped", GLUT_BITMAP_TIMES_ROMAN_24);
+	if (screen == 4) // Info
+	{
+		iShowBMP(0, 0, "bg8.bmp");
+		iText(30, 120, "Use Left click to move a picture .The picture you click will be swapped", GLUT_BITMAP_TIMES_ROMAN_24);
 		iText(30, 100, "with the blank pic.", GLUT_BITMAP_TIMES_ROMAN_24);
 		iText(30, 20, "You have \"30 or 45 SECONDS \" time to match it.", GLUT_BITMAP_TIMES_ROMAN_24);
 		iSetColor(0, 0, 0);
 		iText(30, 50, "Press o to mute sound and m to unmute.", GLUT_BITMAP_TIMES_ROMAN_24);
 		iShowBMP2(550, 400, "button6.bmp", 0);
-		iText(30,150,"In easy mode you will get more time than hard mode",GLUT_BITMAP_TIMES_ROMAN_24);
+		iText(30, 150, "In easy mode you will get more time than hard mode", GLUT_BITMAP_TIMES_ROMAN_24);
 	}
 
-	if(screen == 5)                //lose
-	{                         
-		iShowBMP(0,0,"lose.bmp");
-		iShowBMP2(550, 30, "button6.bmp", 0);
-		iSetColor(0,0,0);
+	if (screen == 5) // lose
+	{
+		iShowBMP(0, 0, "lose.bmp");
+		iShowBMP2(250, 30, "button6.bmp", 0);
+		iSetColor(0, 0, 0);
 		iText(350, 350, "YOU LOSE", GLUT_BITMAP_TIMES_ROMAN_24);
-		//iShowBMP2(0,0,"R.bmp",0);
+		
 	}
 
-	if(screen==6)                //win
+	if (screen == 6) // win
 	{
-		iShowBMP(20,20,"win.bmp");
+		iShowBMP(20, 20, "win.bmp");
 		iShowBMP2(550, 30, "button6.bmp", 0);
-        iSetColor(255,255,255);
-		iText(520,400,"YOU WON",GLUT_BITMAP_TIMES_ROMAN_24);
-		iText(550,300,"YOUR TIME :",GLUT_BITMAP_TIMES_ROMAN_24);
-		iText(700,300,score,GLUT_BITMAP_TIMES_ROMAN_24);
-		iText(730,300,"sec",GLUT_BITMAP_TIMES_ROMAN_24);
-
+		iSetColor(255, 255, 255);
+		iText(520, 400, "YOU WON", GLUT_BITMAP_TIMES_ROMAN_24);
+		iText(550, 300, "YOUR TIME :", GLUT_BITMAP_TIMES_ROMAN_24);
+		iText(700, 300, score, GLUT_BITMAP_TIMES_ROMAN_24);
+		iText(550, 250, "YOUR MOVE :", GLUT_BITMAP_TIMES_ROMAN_24);
+		iText(720, 250, move, GLUT_BITMAP_TIMES_ROMAN_24);
+		iText(730, 300, "sec", GLUT_BITMAP_TIMES_ROMAN_24);
 	}
-	if(screen == 7)            //enter
+	if (screen == 7) // enter
 	{
-		iShowBMP(0,0,"bg4.bmp");
-		iShowBMP2(0,375,"button11.bmp",0);
-		iShowBMP2(375,375,"button12.bmp",0);
+		iShowBMP(0, 0, "bg4.bmp");
+		iShowBMP2(0, 375, "button11.bmp", 0);
+		iShowBMP2(375, 375, "button12.bmp", 0);
 		iShowBMP2(300, 30, "button6.bmp", 0);
+		iSetColor(0, 0, 0);
+		if (easy)
+		{
+			iText(30, 450, "MODE : Easy", GLUT_BITMAP_TIMES_ROMAN_24);
+		}
+		else
+		{
+			iText(30, 450, "MODE : Hard", GLUT_BITMAP_TIMES_ROMAN_24);
+		}
 	}
-
-	
 }
 
 /*
@@ -243,10 +343,9 @@ void iMouse(int button, int state, int mx, int my)
 		if (screen == 0)
 		{
 			if (mx >= 30 && mx <= 230 && my >= 300 && my <= 368)
-			{   
-				
+			{
+
 				screen = 7;
-				
 			}
 			if (mx >= 30 && mx <= 230 && my >= 200 && my <= 268)
 			{
@@ -256,21 +355,33 @@ void iMouse(int button, int state, int mx, int my)
 			{
 				screen = 3;
 			}
-			if(mx>=580 && mx <= 780 && my >= 20 && my <= 88)
+			if (mx >= 580 && mx <= 780 && my >= 20 && my <= 88)
 			{
 				screen = 4;
 			}
 		}
-		
-		if(screen==1)
+
+		if (screen == 1)
 		{
-			if(mx >= 550 && mx <= 750 && my >= 30 && my <= 98)
+			if (mx >= 0 && mx <= 500 && my >= 0 && my < 500)
 			{
-				screen=7;
+				moveCount++;
 			}
-			int tempx = (mx/167)*167 ;
-			int tempy = (my/167)*167 ;
-			for (int i = 1; i<=9; i++)
+			// if (mx >= 550 && mx <= 750 && my >= 30 && my <= 98)
+			// {
+			// 	screen = 7;
+			// 	if (puzNo < 4)
+			// 	{
+			// 		puzNo++;
+			// 	}
+			// 	else
+			// 	{
+			// 		puzNo = 1;
+			// 	}
+			// }
+			int tempx = (mx / 167) * 167;
+			int tempy = (my / 167) * 167;
+			for (int i = 1; i <= 9; i++)
 			{
 				if (pic[i].x == tempx && pic[i].y == tempy)
 				{
@@ -280,18 +391,21 @@ void iMouse(int button, int state, int mx, int my)
 					wall_y = tempy;
 					break;
 				}
-
 			}
 		}
-		if(screen==8)
+		if (screen == 8)
 		{
-			if(mx >= 550 && mx <= 750 && my >= 30 && my <= 98)
+			// if (mx >= 550 && mx <= 750 && my >= 30 && my <= 98)
+			// {
+			// 	screen = 7;
+			// }
+			if (mx >= 0 && mx <= 500 && my >= 0 && my < 500)
 			{
-				screen=7;
+				moveCount++;
 			}
-			int tempx2 = (mx/125)*125 ;
-			int tempy2 = (my/125)*125 ;
-			for (int i = 1; i<=16; i++)
+			int tempx2 = (mx / 125) * 125;
+			int tempy2 = (my / 125) * 125;
+			for (int i = 1; i <= 16; i++)
 			{
 				if (pic2[i].x2 == tempx2 && pic2[i].y2 == tempy2)
 				{
@@ -301,106 +415,111 @@ void iMouse(int button, int state, int mx, int my)
 					wall_y2 = tempy2;
 					break;
 				}
-
 			}
 		}
-		if(screen==2)
+		if (screen == 2)
 		{
-			if(mx >= 550 && mx <= 750 && my >= 30 && my <= 98)
+			if (mx >= 550 && mx <= 750 && my >= 30 && my <= 98)
 			{
-				screen=0;
+				screen = 0;
 			}
 		}
-		if (screen ==2)
+		if (screen == 2)
 		{
-			if(mx >= 50 && mx <= 250 && my >= 400 && my <= 468)
+			if (mx >= 50 && mx <= 250 && my >= 400 && my <= 468)
 			{
-                PlaySound("music.wav", NULL, SND_LOOP | SND_ASYNC);
+				PlaySound(TEXT("music.wav"), NULL, SND_LOOP | SND_ASYNC);
 				musicOn = true;
-
 			}
-			if(mx >= 550 && mx <= 750 && my >= 400 && my <= 468)
+			if (mx >= 550 && mx <= 750 && my >= 400 && my <= 468)
 			{
-				PlaySound(0,0,0);
+				PlaySound(0, 0, 0);
 				musicOn = false;
-				   
 			}
-	
 		}
-		if(screen==3)
+		if (screen == 3)
 		{
-           if(mx >= 50 && mx <= 250 && my >= 350 && my <= 350+68)
+			if (mx >= 50 && mx <= 250 && my >= 350 && my <= 350 + 68)
 			{
-				easy=false;
+				easy = false;
 			}
-			if(mx >= 550 && mx <= 750 && my >= 350 && my <= 350+68)
+			if (mx >= 550 && mx <= 750 && my >= 350 && my <= 350 + 68)
 			{
-				easy=true;
+				easy = true;
 			}
-			if(mx >= 550 && mx <= 750 && my >= 30 && my <= 98)
+			if (mx >= 550 && mx <= 750 && my >= 30 && my <= 98)
 			{
-				screen=0;
+				screen = 0;
 			}
 		}
 
-		if(screen == 4)
+		if (screen == 4)
 		{
-			if(mx >= 550 && mx <= 750 && my >= 400 && my <= 468)
+			if (mx >= 550 && mx <= 750 && my >= 400 && my <= 468)
 			{
-				screen=0;
+				screen = 0;
 			}
 		}
-		if(screen == 5)
-		{   
-			
-			if(mx >= 550 && mx <= 750 && my >= 30 && my <= 98)
+		if (screen == 5)
+		{
+
+			if (mx >= 250 && mx <= 550 && my >= 30 && my <= 98)
 			{
-				screen=0;
-				if(musicOn == true){
-				 PlaySound("music.wav", NULL, SND_LOOP | SND_ASYNC);
+				screen = 0;
+				if (musicOn == true)
+				{
+					PlaySound(TEXT("music.wav"), NULL, SND_LOOP | SND_ASYNC);
 				}
 			}
 		}
-		if(screen == 6)
+		if (screen == 6)
 		{
-			if(mx >= 550 && mx <= 750 && my >= 30 && my <= 98)
+			if (mx >= 550 && mx <= 750 && my >= 30 && my <= 98)
 			{
-				screen=0;
-				if(musicOn == true){
-				 PlaySound("music.wav", NULL, SND_LOOP | SND_ASYNC);
+				screen = 0;
+				if (musicOn == true)
+				{
+					PlaySound(TEXT("music.wav"), NULL, SND_LOOP | SND_ASYNC);
 				}
 			}
 		}
-		if(screen == 7){
-			if(mx>=0 && mx<=200 && my>=375 && my<=375+68){
+		if (screen == 7)
+		{
+			if (mx >= 0 && mx <= 200 && my >= 375 && my <= 375 + 68)
+			{
+				moveCount = 0;
 				coordinates();
 				location_change();
 				screen = 1;
-				if(easy==true)
+				if (easy == true)
 				{
-					start=clock()+31000;
+					start = clock() + 31000;
 				}
 				else
 				{
-					start=clock()+21000;
+					start = clock() + 21000;
 				}
+				PlaySound(0, 0, 0);
 			}
-			if(mx>=375 && mx<=575 && my>=375 && my<=375+68){
+			if (mx >= 375 && mx <= 575 && my >= 375 && my <= 375 + 68)
+			{
+				moveCount = 0;
 				coordinates2();
 				location_change2();
 				screen = 8;
-				if(easy==true)
+				if (easy == true)
 				{
-					start2=clock()+46000;
+					start2 = clock() + 46000;
 				}
 				else
 				{
-					start2=clock()+31000;
-				}	
+					start2 = clock() + 31000;
+				}
+				PlaySound(0, 0, 0);
 			}
-			if(mx >= 300 && mx <= 500 && my >= 30 && my <= 98)
+			if (mx >= 300 && mx <= 500 && my >= 30 && my <= 98)
 			{
-				screen=0;
+				screen = 0;
 			}
 		}
 	}
@@ -417,19 +536,22 @@ void iKeyboard(unsigned char key)
 		// do something with 'x'
 		exit(0);
 	}
-    if(screen!=1){
+	if (screen != 1 && screen!=8 && screen!=7)
+	{
 
-	if(key == 'm'){
-	PlaySound("music.wav", NULL, SND_LOOP | SND_ASYNC);
+		if (key == 'm')
+		{
+			PlaySound(TEXT("music.wav"), NULL, SND_LOOP | SND_ASYNC);
+		}
+		if (key == 'o')
+		{
+			PlaySound(0, 0, 0);
+		}
 	}
-	if(key == 'o'){
-	  PlaySound(0,0,0);
-	}
-	}
-	
+}
 
 	// place your codes for other keys here
-}
+
 
 void iSpecialKeyboard(unsigned char key)
 {
@@ -438,8 +560,6 @@ void iSpecialKeyboard(unsigned char key)
 	{
 		exit(0);
 	}
-	
-
 
 	// place your codes for other keys here
 }
@@ -450,11 +570,11 @@ void location_change()
 	int box[6];
 	srand(time(NULL));
 
-	for (int i = 0; i<6; i++)
+	for (int i = 0; i < 6; i++)
 	{
 		box[i] = rand() % (high - low) + low;
 	redo:
-		for (int j = 0; j<i; j++)
+		for (int j = 0; j < i; j++)
 		{
 			if (box[i] == box[j])
 			{
@@ -462,44 +582,42 @@ void location_change()
 				goto redo;
 			}
 		}
-		
 	}
-	for (int i = 0; i<6; i = i + 2)
+	for (int i = 0; i < 6; i = i + 2)
 	{
 		pic[box[i]].x = correct_pic[box[i + 1]].x;
 		pic[box[i]].y = correct_pic[box[i + 1]].y;
-		//printf("%d got %d's coordinates\n",box[i],box[i+1]);
+		// printf("%d got %d's coordinates\n",box[i],box[i+1]);
 		pic[box[i + 1]].x = correct_pic[box[i]].x;
 		pic[box[i + 1]].y = correct_pic[box[i]].y;
-
 	}
-
 }
 void coordinates()
 {
 	int n = 0;
-	for (int i = 0; i<3; i++)
+	for (int i = 0; i < 3; i++)
 	{
-		for (int j = 0; j<3; j++)
+		for (int j = 0; j < 3; j++)
 		{
-			pic[n].x = 0 + j * 167;		//storing real addresses
+			pic[n].x = 0 + j * 167; // storing real addresses
 			pic[n].y = 334 - i * 167;
-			correct_pic[n].x = pic[n].x;	//storing real addresses
+			correct_pic[n].x = pic[n].x; // storing real addresses
 			correct_pic[n].y = pic[n].y;
 			n++;
-
 		}
 	}
 }
 
-void check_match(){
-	 match = true;
-    int n=1;
-	for (int i = 0; i<3; i++)
+void check_match()
+{
+	match = true;
+	int n = 1;
+	for (int i = 0; i < 3; i++)
 	{
-		for (int j = 0; j<3; j++)
+		for (int j = 0; j < 3; j++)
 		{
-			if (i == 0 && j == 0)    continue;
+			if (i == 0 && j == 0)
+				continue;
 			else
 			{
 				if (pic[n].x != correct_pic[n].x)
@@ -514,7 +632,6 @@ void check_match(){
 				}
 				n++;
 			}
-
 		}
 	}
 }
@@ -525,11 +642,11 @@ void location_change2()
 	int box[8];
 	srand(time(NULL));
 
-	for (int i = 0; i<8; i++)
+	for (int i = 0; i < 8; i++)
 	{
 		box[i] = rand() % (high - low) + low;
 	redo:
-		for (int j = 0; j<i; j++)
+		for (int j = 0; j < i; j++)
 		{
 			if (box[i] == box[j])
 			{
@@ -537,44 +654,42 @@ void location_change2()
 				goto redo;
 			}
 		}
-		
 	}
-	for (int i = 0; i<8; i = i + 2)
+	for (int i = 0; i < 8; i = i + 2)
 	{
 		pic2[box[i]].x2 = correct_pic2[box[i + 1]].x2;
 		pic2[box[i]].y2 = correct_pic2[box[i + 1]].y2;
-		//printf("%d got %d's coordinates\n",box[i],box[i+1]);
+		// printf("%d got %d's coordinates\n",box[i],box[i+1]);
 		pic2[box[i + 1]].x2 = correct_pic2[box[i]].x2;
 		pic2[box[i + 1]].y2 = correct_pic2[box[i]].y2;
-
 	}
-
 }
 void coordinates2()
 {
 	int n = 0;
-	for (int i = 0; i<4; i++)
+	for (int i = 0; i < 4; i++)
 	{
-		for (int j = 0; j<4; j++)
+		for (int j = 0; j < 4; j++)
 		{
-			pic2[n].x2 = 0 + j * 125;		//storing real addresses
+			pic2[n].x2 = 0 + j * 125; // storing real addresses
 			pic2[n].y2 = 375 - i * 125;
-			correct_pic2[n].x2 = pic2[n].x2;	//storing real addresses
-			correct_pic2[n].y2= pic2[n].y2;
+			correct_pic2[n].x2 = pic2[n].x2; // storing real addresses
+			correct_pic2[n].y2 = pic2[n].y2;
 			n++;
-
 		}
 	}
 }
 
-void check_match2(){
-	 match2 = true;
-    int n=1;
-	for (int i = 0; i<4; i++)
+void check_match2()
+{
+	match2 = true;
+	int n = 1;
+	for (int i = 0; i < 4; i++)
 	{
-		for (int j = 0; j<4; j++)
+		for (int j = 0; j < 4; j++)
 		{
-			if (i == 0 && j == 0)    continue;
+			if (i == 0 && j == 0)
+				continue;
 			else
 			{
 				if (pic2[n].x2 != correct_pic2[n].x2)
@@ -589,7 +704,6 @@ void check_match2(){
 				}
 				n++;
 			}
-
 		}
 	}
 }
@@ -597,8 +711,7 @@ int main()
 {
 	// place your own initialization codes here.
 	// t=iSetTimer(50,iChangePic);
-	
-	PlaySound("music.wav", NULL, SND_LOOP | SND_ASYNC);
+	PlaySound(TEXT("music.wav"), NULL, SND_LOOP | SND_ASYNC);
 	iInitialize(800, 500, "Pokemon Puzzle Game");
 	return 0;
 }
