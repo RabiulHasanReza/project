@@ -93,6 +93,7 @@ void iDraw()
 
 		// iShowBMP(0, 0, "screen2.bmp");
 		iShowBMP(0, 0, "wall.bmp");
+		iShowBMP2(550, 30, "button6.bmp", 0);
 		if(puzNo==1)
 		{
 			iShowBMP(550, 300, "preview.bmp");
@@ -131,6 +132,9 @@ void iDraw()
 			{
 				puzNo = 1;
 			}
+
+			wall_x=0;
+			wall_y=334;
 		}
 		iText(580, 150, "TIME :", GLUT_BITMAP_TIMES_ROMAN_24);
 		iText(660, 150, str, GLUT_BITMAP_TIMES_ROMAN_24);
@@ -196,6 +200,7 @@ void iDraw()
 		// iShowBMP(0, 0, "screen2.bmp");
 		iShowBMP(0, 0, "wall.bmp");
 		iShowBMP(550, 300, "preview2.bmp");
+		iShowBMP2(550, 30, "button6.bmp", 0);
 		iText(600, 275, "Match this", GLUT_BITMAP_TIMES_ROMAN_24);
 		//iShowBMP2(550, 30, "button6.bmp", 0);
 
@@ -211,6 +216,8 @@ void iDraw()
 			screen = 5;
 			PlaySound(TEXT("game over.wav"), NULL, SND_ASYNC);
 			// PlaySound("bg music.wav", NULL, SND_LOOP | SND_ASYNC);
+			wall_x2=0;
+		    wall_y2=375;
 		}
 		iText(580, 150, "TIME :", GLUT_BITMAP_TIMES_ROMAN_24);
 		iText(660, 150, str, GLUT_BITMAP_TIMES_ROMAN_24);
@@ -367,18 +374,21 @@ void iMouse(int button, int state, int mx, int my)
 			{
 				moveCount++;
 			}
-			// if (mx >= 550 && mx <= 750 && my >= 30 && my <= 98)
-			// {
-			// 	screen = 7;
-			// 	if (puzNo < 4)
-			// 	{
-			// 		puzNo++;
-			// 	}
-			// 	else
-			// 	{
-			// 		puzNo = 1;
-			// 	}
-			// }
+			if (mx >= 550 && mx <= 750 && my >= 30 && my <= 98)
+			{
+				screen = 7;
+				if (puzNo < 4)
+				{
+					puzNo++;
+				}
+				else
+				{
+					puzNo = 1;
+				}
+				wall_x=0;
+			    wall_y=334;
+			}
+			
 			int tempx = (mx / 167) * 167;
 			int tempy = (my / 167) * 167;
 			for (int i = 1; i <= 9; i++)
@@ -395,10 +405,12 @@ void iMouse(int button, int state, int mx, int my)
 		}
 		if (screen == 8)
 		{
-			// if (mx >= 550 && mx <= 750 && my >= 30 && my <= 98)
-			// {
-			// 	screen = 7;
-			// }
+			if (mx >= 550 && mx <= 750 && my >= 30 && my <= 98)
+			{
+				screen = 7;
+				wall_x2=0;
+			    wall_y2=375;
+			}
 			if (mx >= 0 && mx <= 500 && my >= 0 && my < 500)
 			{
 				moveCount++;
