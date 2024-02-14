@@ -11,11 +11,11 @@ void location_change2();
 void coordinates2();
 void check_match2();
 
-bool musicOn = true;
+bool musicOn = true ;
 bool easy = true;
-int screen = 0;
+int screen = 0 ,puzzleCount;
 clock_t start, start2;
-int puzNo=1;
+int puzNo=1,run=1;
 double moveCount=0;
 
 
@@ -73,6 +73,8 @@ int wall_x = 0, wall_y = 334;
 int wall_x2 = 0, wall_y2 = 375;
 char score[10];
 char move[10];
+char name[100];
+int nameIndex=0;
 
 void iDraw()
 {
@@ -86,6 +88,7 @@ void iDraw()
 		iShowBMP2(30, 200, "button 2.bmp", 0);
 		iShowBMP2(30, 100, "button 3.bmp", 0);
 		iShowBMP2(580, 20, "info button.bmp", 0);
+		iShowBMP2(580,120,"button14.bmp",0);
 	}
 
 	if (screen == 1) // Puzzle1
@@ -311,6 +314,146 @@ void iDraw()
 		iText(550, 250, "YOUR MOVE :", GLUT_BITMAP_TIMES_ROMAN_24);
 		iText(720, 250, move, GLUT_BITMAP_TIMES_ROMAN_24);
 		iText(730, 300, "sec", GLUT_BITMAP_TIMES_ROMAN_24);
+     if(puzzleCount==1)
+	 {
+		if (run == 1)
+		{
+			FILE *ifp1 = fopen("score.txt", "r");
+			FILE *ofp2 = fopen("out.txt", "w");
+			
+			//comparing
+			char id[150];
+			while (fgets(id, 100, ifp1))
+			{
+
+				char point[10];
+				fgets(point, 8, ifp1);
+				int v = atoi(point);
+
+				if (moveCount<v)
+				{
+					fputs(name, ofp2);
+					fprintf(ofp2, "\n");
+					fputs(move, ofp2);
+					fprintf(ofp2, "\n");
+					fputs(id, ofp2);
+					fputs(point, ofp2);
+
+				}
+				else
+				{
+					fputs(id, ofp2);
+					fputs(point, ofp2);
+				}
+
+			}
+			fclose(ifp1);
+			fclose(ofp2);
+			FILE *ofp1 = fopen("score.txt", "w");
+			FILE *ifp2 = fopen("out.txt", "r");
+
+			char temp[200];
+			while (fgets(temp, 150, ifp2))
+			{
+				fputs(temp, ofp1);
+			}
+			fclose(ifp2);
+			fclose(ofp1);
+			run++;
+		}
+
+			
+		//show file
+		FILE *ifp = fopen("score.txt", "r");
+		if (ifp == NULL)	printf("Cant open ifp");
+		else
+		{
+			
+				char newName[200];
+				char point[10];
+				fgets(newName, 200, ifp);
+				fgets(point, 8, ifp);
+				iText(480, 150, "NAME :", GLUT_BITMAP_TIMES_ROMAN_24);
+				iText(580, 150 , newName, GLUT_BITMAP_TIMES_ROMAN_24);
+				iText(670, 150, "MOVE :", GLUT_BITMAP_TIMES_ROMAN_24);
+				iText(760, 150, point, GLUT_BITMAP_TIMES_ROMAN_24);
+			
+		}
+		fclose(ifp);
+		iSetColor(255,0,0);
+		iLine(520,195,800,195);
+		iText(550, 200, "TOP SCORE :", GLUT_BITMAP_TIMES_ROMAN_24);
+	 }
+	 if(puzzleCount==2)
+	 {
+		if (run == 1)
+		{
+			FILE *ifp1 = fopen("score2.txt", "r");
+			FILE *ofp2 = fopen("out2.txt", "w");
+			//comparing
+			char id[150];
+			while (fgets(id, 100, ifp1))
+			{
+
+				char point[10];
+				fgets(point, 8, ifp1);
+				int v = atoi(point);
+
+				if (moveCount<v)
+				{
+					fputs(name, ofp2);
+					fprintf(ofp2, "\n");
+					fputs(move, ofp2);
+					fprintf(ofp2, "\n");
+					fputs(id, ofp2);
+					fputs(point, ofp2);
+					
+
+				}
+				else
+				{
+					fputs(id, ofp2);
+					fputs(point, ofp2);
+				}
+
+			}
+			fclose(ifp1);
+			fclose(ofp2);
+			FILE *ofp1 = fopen("score2.txt", "w");
+			FILE *ifp2 = fopen("out2.txt", "r");
+
+			char temp[200];
+			while (fgets(temp, 150, ifp2))
+			{
+				fputs(temp, ofp1);
+			}
+			fclose(ifp2);
+			fclose(ofp1);
+			run++;
+		}
+
+			
+		//show file
+		FILE *ifp = fopen("score2.txt", "r");
+		if (ifp == NULL)	printf("Cant open ifp");
+		else
+		{
+			
+				char newName[200];
+				char point[10];
+				fgets(newName, 200, ifp);
+				fgets(point, 8, ifp);
+				iText(480, 150, "NAME :", GLUT_BITMAP_TIMES_ROMAN_24);
+				iText(580, 150 , newName, GLUT_BITMAP_TIMES_ROMAN_24);
+				iText(670, 150, "MOVE :", GLUT_BITMAP_TIMES_ROMAN_24);
+				iText(760, 150, point, GLUT_BITMAP_TIMES_ROMAN_24);
+			
+		}
+		fclose(ifp);
+		iSetColor(255,0,0);
+		iLine(520,195,800,195);
+		iText(550, 200, "TOP SCORE :", GLUT_BITMAP_TIMES_ROMAN_24);
+	 }
 	}
 	if (screen == 7) // enter
 	{
@@ -327,7 +470,57 @@ void iDraw()
 		{
 			iText(30, 450, "MODE : Hard", GLUT_BITMAP_TIMES_ROMAN_24);
 		}
+
+        iSetColor(255,255,255);
+		iFilledRectangle(0,150,800,50);
+		iSetColor(0, 0, 0);
+		iText(20,165,"ENTER YOUR NAME :" ,GLUT_BITMAP_TIMES_ROMAN_24);
+        iText(280,165,name ,GLUT_BITMAP_TIMES_ROMAN_24);
 	}
+
+
+	if(screen == 9){
+		iShowBMP(0,0,"leaderboard.bmp");
+		iShowBMP2(550, 30, "button6.bmp", 0);
+		iSetColor(0,0,0);
+		iText(20,450,"Puzle 3x3",GLUT_BITMAP_TIMES_ROMAN_24);
+		iLine(0,440,150,440);
+		FILE *ifp = fopen("score.txt", "r");
+		if (ifp == NULL)	printf("Cant open ifp");
+		else
+		{
+			for (int i = 0; i < 3; i++)
+			{
+				char newName[150];
+				char point[10];
+				fgets(newName, 200, ifp);
+				fgets(point, 8, ifp);
+				iText(30, 400 - i * 50, newName, GLUT_BITMAP_TIMES_ROMAN_24);
+				iText(120, 400 - i * 50, point, GLUT_BITMAP_TIMES_ROMAN_24);
+			}
+			fclose(ifp);
+		}
+		iSetColor(0,0,0);
+		iText(520,450,"Puzle 4x4",GLUT_BITMAP_TIMES_ROMAN_24);
+		iLine(520,440,670,440);
+		FILE *ifp2 = fopen("score2.txt", "r");
+		if (ifp2 == NULL)	printf("Cant open ifp");
+		else
+		{
+			for (int i = 0; i < 3; i++)
+			{
+				char newName[150];
+				char point[10];
+				fgets(newName, 200, ifp);
+				fgets(point, 8, ifp);
+				iText(530, 400 - i * 50, newName, GLUT_BITMAP_TIMES_ROMAN_24);
+				iText(620, 400 - i * 50, point, GLUT_BITMAP_TIMES_ROMAN_24);
+			}
+			fclose(ifp2);
+		}
+		
+	}
+
 }
 
 /*
@@ -365,6 +558,10 @@ void iMouse(int button, int state, int mx, int my)
 			if (mx >= 580 && mx <= 780 && my >= 20 && my <= 88)
 			{
 				screen = 4;
+			}
+			if (mx >= 580 && mx <= 780 && my >= 120 && my <= 188)
+			{
+				screen = 9;
 			}
 		}
 
@@ -503,6 +700,7 @@ void iMouse(int button, int state, int mx, int my)
 				coordinates();
 				location_change();
 				screen = 1;
+				puzzleCount=1;
 				if (easy == true)
 				{
 					start = clock() + 31000;
@@ -519,6 +717,7 @@ void iMouse(int button, int state, int mx, int my)
 				coordinates2();
 				location_change2();
 				screen = 8;
+				puzzleCount=2;
 				if (easy == true)
 				{
 					start2 = clock() + 46000;
@@ -530,6 +729,13 @@ void iMouse(int button, int state, int mx, int my)
 				PlaySound(0, 0, 0);
 			}
 			if (mx >= 300 && mx <= 500 && my >= 30 && my <= 98)
+			{
+				screen = 0;
+			}
+		}
+
+	    if(screen == 9){
+			if (mx >= 550 && mx <= 750 && my >= 30 && my <= 98)
 			{
 				screen = 0;
 			}
@@ -558,6 +764,27 @@ void iKeyboard(unsigned char key)
 		if (key == 'o')
 		{
 			PlaySound(0, 0, 0);
+		}
+	}
+	if(screen == 7){
+		if (key != '\b')
+		{
+			name[nameIndex] = key;
+			nameIndex++;
+			name[nameIndex] = '\0';
+		}
+		else
+		{
+			if (nameIndex > 0)
+			{
+				nameIndex--;
+				name[nameIndex] = '\0';
+
+			}
+			else
+			{
+				nameIndex = 0;
+			}
 		}
 	}
 }
