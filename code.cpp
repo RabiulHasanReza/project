@@ -320,7 +320,7 @@ void iDraw()
 		{
 			FILE *ifp1 = fopen("score.txt", "r");
 			FILE *ofp2 = fopen("out.txt", "w");
-			
+			int mind = 0;
 			//comparing
 			char id[150];
 			while (fgets(id, 100, ifp1))
@@ -330,7 +330,7 @@ void iDraw()
 				fgets(point, 8, ifp1);
 				int v = atoi(point);
 
-				if (moveCount<v)
+				if (moveCount<v && mind == 0)
 				{
 					fputs(name, ofp2);
 					fprintf(ofp2, "\n");
@@ -338,6 +338,7 @@ void iDraw()
 					fprintf(ofp2, "\n");
 					fputs(id, ofp2);
 					fputs(point, ofp2);
+                 mind++;
 
 				}
 				else
@@ -390,6 +391,7 @@ void iDraw()
 		{
 			FILE *ifp1 = fopen("score2.txt", "r");
 			FILE *ofp2 = fopen("out2.txt", "w");
+            int mind = 0;
 			//comparing
 			char id[150];
 			while (fgets(id, 100, ifp1))
@@ -399,7 +401,7 @@ void iDraw()
 				fgets(point, 8, ifp1);
 				int v = atoi(point);
 
-				if (moveCount<v)
+				if (moveCount<v && mind == 0)
 				{
 					fputs(name, ofp2);
 					fprintf(ofp2, "\n");
@@ -407,7 +409,7 @@ void iDraw()
 					fprintf(ofp2, "\n");
 					fputs(id, ofp2);
 					fputs(point, ofp2);
-					
+					mind++;
 
 				}
 				else
