@@ -576,6 +576,10 @@ void iMouse(int button, int state, int mx, int my)
 			if (mx >= 550 && mx <= 750 && my >= 30 && my <= 98)
 			{
 				screen = 7;
+				if (musicOn == true)
+				{
+					PlaySound(TEXT("music.wav"), NULL, SND_LOOP | SND_ASYNC);
+				}
 				if (puzNo < 4)
 				{
 					puzNo++;
@@ -609,6 +613,10 @@ void iMouse(int button, int state, int mx, int my)
 				screen = 7;
 				wall_x2=0;
 			    wall_y2=375;
+				if (musicOn == true)
+				{
+					PlaySound(TEXT("music.wav"), NULL, SND_LOOP | SND_ASYNC);
+				}
 			}
 			if (mx >= 0 && mx <= 500 && my >= 0 && my < 500)
 			{
