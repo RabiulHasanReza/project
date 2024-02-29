@@ -12,7 +12,7 @@ void coordinates2();
 void check_match2();
 
 bool musicOn = true;
-bool easy = true;
+bool easy = true, enter = false;
 int screen = 0, puzzleCount;
 clock_t start, start2;
 int puzNo = 1, run = 1, puzNo2 = 1;
@@ -79,6 +79,7 @@ char score[10];
 char move[10];
 char name[100];
 int nameIndex = 0;
+int coX=270,coY=200;
 
 void iDraw()
 {
@@ -86,13 +87,24 @@ void iDraw()
 	// place your drawing codes here
 	if (screen == 0) // Home page
 	{
-
+        
 		iShowBMP(0, 0, "OIG4.bmp");
 		iShowBMP2(30, 300, "button 1.bmp", 0);
 		iShowBMP2(30, 200, "button 2.bmp", 0);
 		iShowBMP2(30, 100, "button 3.bmp", 0);
 		iShowBMP2(580, 20, "info button.bmp", 0);
 		iShowBMP2(580, 120, "button14.bmp", 0);
+		iShowBMP(coX,coY,"try.bmp");
+		iSetColor(0,0,0);
+		iLine(270,0,270,300);
+		iLine(570,0,570,300);
+		iLine(270,300,570,300);
+		iLine(271,0,271,300);
+		iLine(571,0,571,300);
+		iLine(270,301,570,301);
+		iLine(272,0,272,300);
+		iLine(572,0,572,300);
+		iLine(270,302,570,302);
 	}
 
 	if (screen == 1) // Puzzle1
@@ -207,9 +219,12 @@ void iDraw()
 	{
 		// iShowBMP(0, 0, "screen2.bmp");
 		iShowBMP(0, 0, "wall.bmp");
-		if(puzNo2==1)  iShowBMP(550, 300, "preview2.bmp");
-		if(puzNo2==2)  iShowBMP(550, 300, "raichu.bmp");
-		if(puzNo2==3)  iShowBMP(550, 300, "Rrttt.bmp");
+		if (puzNo2 == 1)
+			iShowBMP(550, 300, "preview2.bmp");
+		if (puzNo2 == 2)
+			iShowBMP(550, 300, "raichu.bmp");
+		if (puzNo2 == 3)
+			iShowBMP(550, 300, "Rrttt.bmp");
 		iShowBMP2(550, 30, "button6.bmp", 0);
 		iText(600, 275, "Match this", GLUT_BITMAP_TIMES_ROMAN_24);
 		// iShowBMP2(550, 30, "button6.bmp", 0);
@@ -234,7 +249,7 @@ void iDraw()
 		iText(580, 180, "MOVE :", GLUT_BITMAP_TIMES_ROMAN_24);
 		iText(680, 180, str2, GLUT_BITMAP_TIMES_ROMAN_24);
 
-		int index = 1, index2 = 1,index3=1;
+		int index = 1, index2 = 1, index3 = 1;
 		for (int i = 0; i < 4; i++)
 		{
 			for (int j = 0; j < 4; j++)
@@ -321,14 +336,18 @@ void iDraw()
 		iText(30, 50, "Press o to mute sound and m to unmute.", GLUT_BITMAP_TIMES_ROMAN_24);
 		iShowBMP2(550, 400, "button6.bmp", 0);
 		iText(30, 150, "In easy mode you will get more time than hard mode", GLUT_BITMAP_TIMES_ROMAN_24);
+		iText(400,250,"High score will be shown if you win .",GLUT_BITMAP_TIMES_ROMAN_24);
+		iText(400,220,"To save your score put your name.",GLUT_BITMAP_TIMES_ROMAN_24);
+		iText(400,190,"Don't forget to press enter",GLUT_BITMAP_TIMES_ROMAN_24);
 	}
 
 	if (screen == 5) // lose
 	{
 		iShowBMP(0, 0, "lose.bmp");
-		iShowBMP2(250, 30, "button6.bmp", 0);
+		iShowBMP2(550, 280, "button6.bmp", 0);
+		iShowBMP2(20, 280, "buttonPlay.bmp", 0);
 		iSetColor(0, 0, 0);
-		iText(350, 350, "YOU LOSE", GLUT_BITMAP_TIMES_ROMAN_24);
+		
 	}
 
 	if (screen == 6) // win
@@ -342,54 +361,64 @@ void iDraw()
 		iText(550, 250, "YOUR MOVE :", GLUT_BITMAP_TIMES_ROMAN_24);
 		iText(720, 250, move, GLUT_BITMAP_TIMES_ROMAN_24);
 		iText(730, 300, "sec", GLUT_BITMAP_TIMES_ROMAN_24);
+
+		iSetColor(255, 255, 255);
+		iFilledRectangle(0, 420, 800, 50);
+		iSetColor(0, 0, 0);
+		iText(20, 435, "ENTER YOUR NAME :", GLUT_BITMAP_TIMES_ROMAN_24);
+		iText(280, 435, name, GLUT_BITMAP_TIMES_ROMAN_24);
+		iText(700, 435, "press enter");
+
 		if (puzzleCount == 1)
 		{
-			if (run == 1)
+			if (enter)
 			{
-				FILE *ifp1 = fopen("score.txt", "r");
-				FILE *ofp2 = fopen("out.txt", "w");
-				int mind = 0;
-				// comparing
-				char id[150];
-				while (fgets(id, 100, ifp1))
+				if (run == 1)
 				{
-
-					char point[10];
-					fgets(point, 8, ifp1);
-					int v = atoi(point);
-
-					if (moveCount < v && mind == 0)
+					FILE *ifp1 = fopen("score.txt", "r");
+					FILE *ofp2 = fopen("out.txt", "w");
+					int mind = 0;
+					// comparing
+					char id[150];
+					while (fgets(id, 100, ifp1))
 					{
-						fputs(name, ofp2);
-						fprintf(ofp2, "\n");
-						fputs(move, ofp2);
-						fprintf(ofp2, "\n");
-						fputs(id, ofp2);
-						fputs(point, ofp2);
 
-						mind++;
+						char point[10];
+						fgets(point, 8, ifp1);
+						int v = atoi(point);
+
+						if (moveCount < v && mind == 0)
+						{
+							fputs(name, ofp2);
+							fprintf(ofp2, "\n");
+							fputs(move, ofp2);
+							fprintf(ofp2, "\n");
+							fputs(id, ofp2);
+							fputs(point, ofp2);
+
+							mind++;
+						}
+						else
+						{
+							fputs(id, ofp2);
+							fputs(point, ofp2);
+						}
 					}
-					else
+					fclose(ifp1);
+					fclose(ofp2);
+					FILE *ofp1 = fopen("score.txt", "w");
+					FILE *ifp2 = fopen("out.txt", "r");
+
+					char temp[200];
+					while (fgets(temp, 150, ifp2))
 					{
-						fputs(id, ofp2);
-						fputs(point, ofp2);
+						fputs(temp, ofp1);
 					}
+					fclose(ifp2);
+					fclose(ofp1);
+					run++;
 				}
-				fclose(ifp1);
-				fclose(ofp2);
-				FILE *ofp1 = fopen("score.txt", "w");
-				FILE *ifp2 = fopen("out.txt", "r");
-
-				char temp[200];
-				while (fgets(temp, 150, ifp2))
-				{
-					fputs(temp, ofp1);
-				}
-				fclose(ifp2);
-				fclose(ofp1);
-				run++;
 			}
-
 			// show file
 			FILE *ifp = fopen("score.txt", "r");
 			if (ifp == NULL)
@@ -401,6 +430,7 @@ void iDraw()
 				char point[10];
 				fgets(newName, 200, ifp);
 				fgets(point, 8, ifp);
+				iSetColor(255, 255, 255);
 				iText(480, 150, "NAME :", GLUT_BITMAP_TIMES_ROMAN_24);
 				iText(580, 150, newName, GLUT_BITMAP_TIMES_ROMAN_24);
 				iText(670, 150, "MOVE :", GLUT_BITMAP_TIMES_ROMAN_24);
@@ -413,49 +443,52 @@ void iDraw()
 		}
 		if (puzzleCount == 2)
 		{
-			if (run == 1)
+			if (enter)
 			{
-				FILE *ifp1 = fopen("score2.txt", "r");
-				FILE *ofp2 = fopen("out2.txt", "w");
-				int mind = 0;
-				// comparing
-				char id[150];
-				while (fgets(id, 100, ifp1))
+				if (run == 1)
 				{
-
-					char point[10];
-					fgets(point, 8, ifp1);
-					int v = atoi(point);
-
-					if (moveCount < v && mind == 0)
+					FILE *ifp1 = fopen("score2.txt", "r");
+					FILE *ofp2 = fopen("out2.txt", "w");
+					int mind = 0;
+					// comparing
+					char id[150];
+					while (fgets(id, 100, ifp1))
 					{
-						fputs(name, ofp2);
-						fprintf(ofp2, "\n");
-						fputs(move, ofp2);
-						fprintf(ofp2, "\n");
-						fputs(id, ofp2);
-						fputs(point, ofp2);
-						mind++;
-					}
-					else
-					{
-						fputs(id, ofp2);
-						fputs(point, ofp2);
-					}
-				}
-				fclose(ifp1);
-				fclose(ofp2);
-				FILE *ofp1 = fopen("score2.txt", "w");
-				FILE *ifp2 = fopen("out2.txt", "r");
 
-				char temp[200];
-				while (fgets(temp, 150, ifp2))
-				{
-					fputs(temp, ofp1);
+						char point[10];
+						fgets(point, 8, ifp1);
+						int v = atoi(point);
+
+						if (moveCount < v && mind == 0)
+						{
+							fputs(name, ofp2);
+							fprintf(ofp2, "\n");
+							fputs(move, ofp2);
+							fprintf(ofp2, "\n");
+							fputs(id, ofp2);
+							fputs(point, ofp2);
+							mind++;
+						}
+						else
+						{
+							fputs(id, ofp2);
+							fputs(point, ofp2);
+						}
+					}
+					fclose(ifp1);
+					fclose(ofp2);
+					FILE *ofp1 = fopen("score2.txt", "w");
+					FILE *ifp2 = fopen("out2.txt", "r");
+
+					char temp[200];
+					while (fgets(temp, 150, ifp2))
+					{
+						fputs(temp, ofp1);
+					}
+					fclose(ifp2);
+					fclose(ofp1);
+					run++;
 				}
-				fclose(ifp2);
-				fclose(ofp1);
-				run++;
 			}
 
 			// show file
@@ -469,6 +502,7 @@ void iDraw()
 				char point[10];
 				fgets(newName, 200, ifp);
 				fgets(point, 8, ifp);
+				iSetColor(255, 255, 255);
 				iText(480, 150, "NAME :", GLUT_BITMAP_TIMES_ROMAN_24);
 				iText(580, 150, newName, GLUT_BITMAP_TIMES_ROMAN_24);
 				iText(670, 150, "MOVE :", GLUT_BITMAP_TIMES_ROMAN_24);
@@ -496,11 +530,11 @@ void iDraw()
 			iText(30, 450, "MODE : Hard", GLUT_BITMAP_TIMES_ROMAN_24);
 		}
 
-		iSetColor(255, 255, 255);
-		iFilledRectangle(0, 150, 800, 50);
-		iSetColor(0, 0, 0);
-		iText(20, 165, "ENTER YOUR NAME :", GLUT_BITMAP_TIMES_ROMAN_24);
-		iText(280, 165, name, GLUT_BITMAP_TIMES_ROMAN_24);
+		// iSetColor(255, 255, 255);
+		// iFilledRectangle(0, 150, 800, 50);
+		// iSetColor(0, 0, 0);
+		// iText(20, 165, "ENTER YOUR NAME :", GLUT_BITMAP_TIMES_ROMAN_24);
+		// iText(280, 165, name, GLUT_BITMAP_TIMES_ROMAN_24);
 	}
 
 	if (screen == 9)
@@ -595,6 +629,7 @@ void iMouse(int button, int state, int mx, int my)
 			if (mx >= 0 && mx <= 500 && my >= 0 && my < 500)
 			{
 				moveCount++;
+				PlaySound(TEXT("click.wav"),NULL,SND_ASYNC);
 			}
 			if (mx >= 550 && mx <= 750 && my >= 30 && my <= 98)
 			{
@@ -713,9 +748,17 @@ void iMouse(int button, int state, int mx, int my)
 		if (screen == 5)
 		{
 
-			if (mx >= 250 && mx <= 550 && my >= 30 && my <= 98)
+			if (mx >= 550 && mx <= 750 && my >= 280 && my <= 348)
 			{
 				screen = 0;
+				if (musicOn == true)
+				{
+					PlaySound(TEXT("music.wav"), NULL, SND_LOOP | SND_ASYNC);
+				}
+			}
+			if (mx >= 20 && mx <= 200 && my >= 280 && my <= 348)
+			{
+				screen = 7;
 				if (musicOn == true)
 				{
 					PlaySound(TEXT("music.wav"), NULL, SND_LOOP | SND_ASYNC);
@@ -727,6 +770,7 @@ void iMouse(int button, int state, int mx, int my)
 			if (mx >= 550 && mx <= 750 && my >= 30 && my <= 98)
 			{
 				screen = 0;
+				enter = false;
 				if (musicOn == true)
 				{
 					PlaySound(TEXT("music.wav"), NULL, SND_LOOP | SND_ASYNC);
@@ -810,7 +854,7 @@ void iKeyboard(unsigned char key)
 			PlaySound(0, 0, 0);
 		}
 	}
-	if (screen == 7)
+	if (screen == 6)
 	{
 		if (key != '\b')
 		{
@@ -829,6 +873,10 @@ void iKeyboard(unsigned char key)
 			{
 				nameIndex = 0;
 			}
+		}
+		if (key == '\r')
+		{
+			enter = true;
 		}
 	}
 }
@@ -989,10 +1037,49 @@ void check_match2()
 		}
 	}
 }
+
+void animation(){
+	// srand(time(NULL));
+	// int p=rand() % 2+1;
+	
+	// if(coX<450){
+	// coX=250+(p)*100;
+	// }
+	// if(coX>450){
+	// coX=450-(p)*100;
+	// }
+	// srand(time(NULL));
+	// int q=rand() % 2+1;
+	// if(coY<200){
+	// coY=0+(q)*100;
+	// }
+	// if(coX>200){
+	// coY=200-(q)*100;
+	// }
+	coX+=100;
+	if(coX==570 && coY==200){
+		coY=100;
+		coX=270;
+	}
+	if(coX==570 && coY==100){
+		coY=0;
+		coX=270;
+	}
+	if(coX==570 && coY==0){
+		coX=270;
+		coY=200;
+	
+	}
+	
+	
+}
 int main()
 {
 	// place your own initialization codes here.
-	// t=iSetTimer(50,iChangePic);
+	
+
+	
+	iSetTimer(500,animation);
 	PlaySound(TEXT("music.wav"), NULL, SND_LOOP | SND_ASYNC);
 	iInitialize(800, 500, "Pokemon Puzzle Game");
 	return 0;
