@@ -110,7 +110,7 @@ void iDraw()
 	if (screen == 1) // Puzzle1
 	{
 
-		// iShowBMP(0, 0, "screen2.bmp");
+		
 		iShowBMP(0, 0, "wall.bmp");
 		iShowBMP2(550, 30, "button6.bmp", 0);
 		if (puzNo == 1)
@@ -599,7 +599,7 @@ void iMouse(int button, int state, int mx, int my)
 {
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
 	{
-		if (screen == 0)
+		if (screen == 0)               //Home
 		{
 			if (mx >= 30 && mx <= 230 && my >= 300 && my <= 368)
 			{
@@ -624,7 +624,7 @@ void iMouse(int button, int state, int mx, int my)
 			}
 		}
 
-		if (screen == 1)
+		if (screen == 1)                   //puzzle 1;
 		{
 			if (mx >= 0 && mx <= 500 && my >= 0 && my < 500)
 			{
@@ -664,7 +664,7 @@ void iMouse(int button, int state, int mx, int my)
 				}
 			}
 		}
-		if (screen == 8)
+		if (screen == 8)              //puzzle 2
 		{
 			if (mx >= 550 && mx <= 750 && my >= 30 && my <= 98)
 			{
@@ -702,15 +702,12 @@ void iMouse(int button, int state, int mx, int my)
 				}
 			}
 		}
-		if (screen == 2)
+		if (screen == 2)       //music
 		{
 			if (mx >= 550 && mx <= 750 && my >= 30 && my <= 98)
 			{
 				screen = 0;
 			}
-		}
-		if (screen == 2)
-		{
 			if (mx >= 50 && mx <= 250 && my >= 400 && my <= 468)
 			{
 				PlaySound(TEXT("music.wav"), NULL, SND_LOOP | SND_ASYNC);
@@ -722,7 +719,7 @@ void iMouse(int button, int state, int mx, int my)
 				musicOn = false;
 			}
 		}
-		if (screen == 3)
+		if (screen == 3)       //mode
 		{
 			if (mx >= 50 && mx <= 250 && my >= 350 && my <= 350 + 68)
 			{
@@ -738,14 +735,14 @@ void iMouse(int button, int state, int mx, int my)
 			}
 		}
 
-		if (screen == 4)
+		if (screen == 4)         //info
 		{
 			if (mx >= 550 && mx <= 750 && my >= 400 && my <= 468)
 			{
 				screen = 0;
 			}
 		}
-		if (screen == 5)
+		if (screen == 5)        //lose
 		{
 
 			if (mx >= 550 && mx <= 750 && my >= 280 && my <= 348)
@@ -765,7 +762,7 @@ void iMouse(int button, int state, int mx, int my)
 				}
 			}
 		}
-		if (screen == 6)
+		if (screen == 6)                //win
 		{
 			if (mx >= 550 && mx <= 750 && my >= 30 && my <= 98)
 			{
@@ -777,7 +774,7 @@ void iMouse(int button, int state, int mx, int my)
 				}
 			}
 		}
-		if (screen == 7)
+		if (screen == 7)           //enter
 		{
 			if (mx >= 0 && mx <= 200 && my >= 375 && my <= 375 + 68)
 			{
@@ -821,7 +818,7 @@ void iMouse(int button, int state, int mx, int my)
 			}
 		}
 
-		if (screen == 9)
+		if (screen == 9)                //leaderboard.
 		{
 			if (mx >= 550 && mx <= 750 && my >= 30 && my <= 98)
 			{
@@ -842,7 +839,7 @@ void iKeyboard(unsigned char key)
 		// do something with 'x'
 		exit(0);
 	}
-	if (screen != 1 && screen != 8 && screen != 7)
+	if (screen != 1 && screen != 8 && screen != 7)          //for entering the mane.
 	{
 
 		if (key == 'm')
@@ -894,7 +891,7 @@ void iSpecialKeyboard(unsigned char key)
 	// place your codes for other keys here
 }
 
-void location_change()
+void location_change()          // this function generates random position for puzzle. 
 {
 	int low = 2, high = 9;
 	int box[6];
@@ -917,12 +914,11 @@ void location_change()
 	{
 		pic[box[i]].x = correct_pic[box[i + 1]].x;
 		pic[box[i]].y = correct_pic[box[i + 1]].y;
-		// printf("%d got %d's coordinates\n",box[i],box[i+1]);
 		pic[box[i + 1]].x = correct_pic[box[i]].x;
 		pic[box[i + 1]].y = correct_pic[box[i]].y;
 	}
 }
-void coordinates()
+void coordinates()                 //this fuction generates real position for matched puzzled.
 {
 	int n = 0;
 	for (int i = 0; i < 3; i++)
@@ -938,7 +934,7 @@ void coordinates()
 	}
 }
 
-void check_match()
+void check_match()           // tihs function check if its a match or not to declair win .
 {
 	match = true;
 	int n = 1;
@@ -1039,23 +1035,6 @@ void check_match2()
 }
 
 void animation(){
-	// srand(time(NULL));
-	// int p=rand() % 2+1;
-	
-	// if(coX<450){
-	// coX=250+(p)*100;
-	// }
-	// if(coX>450){
-	// coX=450-(p)*100;
-	// }
-	// srand(time(NULL));
-	// int q=rand() % 2+1;
-	// if(coY<200){
-	// coY=0+(q)*100;
-	// }
-	// if(coX>200){
-	// coY=200-(q)*100;
-	// }
 	coX+=100;
 	if(coX==570 && coY==200){
 		coY=100;
